@@ -57,6 +57,12 @@ const userAvatar = document.getElementById('user-avatar');
 const userName = document.getElementById('user-name');
 const btnFirebaseLogout = document.getElementById('btn-firebase-logout');
 
+// Mobile Sidebar Toggle elements
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+
 // Detail Panel
 const detailPanel = document.getElementById('detail-panel');
 const detailPanelTitle = document.getElementById('detail-panel-title');
@@ -857,6 +863,29 @@ function setupEventListeners() {
   });
   document.querySelectorAll('.modal-close-btn').forEach(btn => {
     btn.addEventListener('click', hideModals);
+  });
+
+  // Mobile Sidebar Toggle Listeners
+  if (btnToggleSidebar) {
+    btnToggleSidebar.addEventListener('click', () => {
+      sidebar.classList.add('open');
+      sidebarOverlay.classList.add('active');
+    });
+  }
+
+  const closeSidebar = () => {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('active');
+  };
+
+  if (btnCloseSidebar) btnCloseSidebar.addEventListener('click', closeSidebar);
+  if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+
+  // 모바일에서 프로젝트 아이템 클릭 시 사이드바 자동 닫기 처리
+  projectList.addEventListener('click', (e) => {
+    if (e.target.closest('.sidebar-item')) {
+      closeSidebar();
+    }
   });
 
   // Firebase Auth Event Listeners (GitHub 소셜 로그인 및 로그아웃)

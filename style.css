@@ -24,13 +24,13 @@ body {
   background-color: var(--bg-color);
   color: var(--text-primary);
   overflow: hidden;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
 }
 
 #app {
   display: flex;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   position: relative;
 }
@@ -776,18 +776,85 @@ button {
 }
 
 /* Responsive design */
-@media (max-width: 900px) {
-  #app {
-    flex-direction: column;
-  }
+/* Sidebar Overlay for Mobile */
+#sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100dvh;
+  background-color: rgba(30, 30, 28, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mobile Sidebar Close Button */
+.btn-close-sidebar {
+  display: none; /* 데스크탑에서는 숨김 */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
   #sidebar {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 2px solid var(--border-color);
+    position: absolute;
+    left: -300px;
+    top: 0;
+    height: 100dvh;
+    width: 300px;
+    min-width: 300px;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.15);
   }
-  .v-line-1 {
-    display: none;
+  
+  #sidebar.open {
+    transform: translateX(300px);
+  }
+
+  .btn-close-sidebar {
+    display: block;
+    position: absolute;
+    top: 1.5rem;
+    right: 1.2rem;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  
+  #btn-toggle-sidebar {
+    display: flex !important;
+  }
+  
+  #control-bar {
+    padding: 0 0.8rem;
+    gap: 0.4rem;
+  }
+  
+  .canvas-controls {
+    gap: 0.3rem;
+  }
+  
+  #btn-add-node, #btn-add-edge {
+    padding: 0.5rem;
+    font-size: 0;
+  }
+  #btn-add-node svg, #btn-add-edge svg {
+    margin: 0;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .control-divider {
+    margin: 0 0.2rem;
   }
 }
 
