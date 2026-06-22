@@ -149,14 +149,14 @@ async function init() {
         { id: 'node_5', name: '촉한', type: 'group', importance: 'core', desc: '유비가 건국한 국가.', x: 250, y: 50, group: '' }
       ],
       edges: [
-        { id: 'edge_1', source: 'node_2', target: 'node_1', type: '의형제 (차남)', direction: 'bidirectional', color: '#3b82f6' },
-        { id: 'edge_2', source: 'node_3', target: 'node_1', type: '의형제 (삼남)', direction: 'bidirectional', color: '#3b82f6' },
-        { id: 'edge_3', source: 'node_2', target: 'node_3', type: '의형제', direction: 'bidirectional', color: '#3b82f6' },
-        { id: 'edge_4', source: 'node_4', target: 'node_1', type: '군신 관계 (책사)', direction: 'directed', color: '#00A699' },
-        { id: 'edge_5', source: 'node_1', target: 'node_5', type: '군주', direction: 'directed', color: '#00A699' },
-        { id: 'edge_6', source: 'node_2', target: 'node_5', type: '장수', direction: 'directed', color: '#00A699' },
-        { id: 'edge_7', source: 'node_3', target: 'node_5', type: '장수', direction: 'directed', color: '#00A699' },
-        { id: 'edge_8', source: 'node_4', target: 'node_5', type: '승상', direction: 'directed', color: '#F5C400' }
+        { id: 'edge_1', source: 'node_2', target: 'node_1', type: '의형제 (차남)', direction: 'bidirectional', color: '#4A69BD' },
+        { id: 'edge_2', source: 'node_3', target: 'node_1', type: '의형제 (삼남)', direction: 'bidirectional', color: '#4A69BD' },
+        { id: 'edge_3', source: 'node_2', target: 'node_3', type: '의형제', direction: 'bidirectional', color: '#4A69BD' },
+        { id: 'edge_4', source: 'node_4', target: 'node_1', type: '군신 관계 (책사)', direction: 'directed', color: '#319795' },
+        { id: 'edge_5', source: 'node_1', target: 'node_5', type: '군주', direction: 'directed', color: '#319795' },
+        { id: 'edge_6', source: 'node_2', target: 'node_5', type: '장수', direction: 'directed', color: '#319795' },
+        { id: 'edge_7', source: 'node_3', target: 'node_5', type: '장수', direction: 'directed', color: '#319795' },
+        { id: 'edge_8', source: 'node_4', target: 'node_5', type: '승상', direction: 'directed', color: '#D9A74A' }
       ]
     };
     state.projects.push(defaultProj);
@@ -302,9 +302,9 @@ function renderProject() {
 // 노드 중요도 및 모바일 기기 감지에 따른 반지름(r) 값 동적 결정 헬퍼
 function getNodeRadius(importance) {
   const isMobile = window.innerWidth <= 768;
-  if (importance === 'core') return isMobile ? 50 : 68;
-  if (importance === 'high') return isMobile ? 42 : 56;
-  return isMobile ? 32 : 44;
+  if (importance === 'core') return isMobile ? 42 : 68;
+  if (importance === 'high') return isMobile ? 34 : 56;
+  return isMobile ? 26 : 44;
 }
 
 // Render Groups (공통점 있는 개체들을 쫀득하고 유기적으로 묶어주는 Gooey Metaball 젤리 배경)
@@ -419,22 +419,29 @@ function renderLinks(proj) {
     path.setAttribute('class', `svg-link ${state.selectedEdgeId === edge.id ? 'selected' : ''}`);
     path.setAttribute('id', edge.id);
     
-    // 성격(색상)에 따른 선의 색상 설정 (기존 데이터 호환용 키워드 분석 포함)
+    // 성격(색상)에 따른 선의 색상 설정 (도시적인 색감 매핑 및 하위 호환)
     let lineColor = edge.color;
     if (!lineColor) {
       const typeText = edge.type || '';
       if (typeText.includes('적대') || typeText.includes('경쟁') || typeText.includes('원수') || typeText.includes('싸움')) {
-        lineColor = '#FF4E3A'; // 다홍색
+        lineColor = '#E05252'; // 크림슨 레드
       } else if (typeText.includes('동맹') || typeText.includes('우호') || typeText.includes('친구') || typeText.includes('군신') || typeText.includes('군주') || typeText.includes('장수') || typeText.includes('주군') || typeText.includes('멤버')) {
-        lineColor = '#00A699'; // 민트색
+        lineColor = '#319795'; // 다크 틸
       } else if (typeText.includes('형제') || typeText.includes('의형제') || typeText.includes('가족') || typeText.includes('부부') || typeText.includes('부모') || typeText.includes('자식') || typeText.includes('아들') || typeText.includes('딸') || typeText.includes('아버지') || typeText.includes('패밀리')) {
-        lineColor = '#3b82f6'; // 파란색
+        lineColor = '#4A69BD'; // 코발트 네이비
       } else if (typeText.includes('승상') || typeText.includes('스승') || typeText.includes('특별') || typeText.includes('기타')) {
-        lineColor = '#F5C400'; // 노란색
+        lineColor = '#D9A74A'; // 브론즈 골드
       } else {
-        lineColor = '#D1CFCA'; // 기본 회색
+        lineColor = '#8E9AA6'; // 슬레이트 그레이
       }
     }
+
+    // 기존 원색 코드 치환
+    if (lineColor === '#FF4E3A') lineColor = '#E05252';
+    if (lineColor === '#00A699') lineColor = '#319795';
+    if (lineColor === '#3b82f6') lineColor = '#4A69BD';
+    if (lineColor === '#F5C400') lineColor = '#D9A74A';
+    if (lineColor === '#D1CFCA') lineColor = '#8E9AA6';
     
     // stroke 속성과 인라인 style 모두 지정하여 확실하게 색상 고정
     path.setAttribute('stroke', lineColor);
@@ -443,10 +450,10 @@ function renderLinks(proj) {
     // 색상에 부합하는 화살표 마커 매핑
     const getMarkerUrl = (color) => {
       if (state.selectedEdgeId === edge.id) return 'url(#arrow-selected)';
-      if (color === '#FF4E3A') return 'url(#arrow-red)';
-      if (color === '#00A699') return 'url(#arrow-teal)';
-      if (color === '#3b82f6') return 'url(#arrow-blue)';
-      if (color === '#F5C400') return 'url(#arrow-yellow)';
+      if (color === '#E05252') return 'url(#arrow-red)';
+      if (color === '#319795') return 'url(#arrow-teal)';
+      if (color === '#4A69BD') return 'url(#arrow-blue)';
+      if (color === '#D9A74A') return 'url(#arrow-yellow)';
       return 'url(#arrow)';
     };
 

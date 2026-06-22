@@ -116,39 +116,39 @@
           <defs>
             <!-- 관계선 화살표 정의 (각 색상별로 분리, 각도를 더 넓히고 길이를 늘린 세련된 선 화살표 형태) -->
             <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#D1CFCA" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#8E9AA6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
             </marker>
             <marker id="arrow-selected" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
               <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#1E1E1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
             </marker>
             <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#FF4E3A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#E05252" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
             </marker>
             <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#00A699" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#319795" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
             </marker>
             <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#3b82f6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#4A69BD" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
             </marker>
             <marker id="arrow-yellow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#F5C400" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#D9A74A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
             </marker>
             
             <!-- 노드 타입별 부드러운 그라데이션 (April Greiman & Modern Pastel Style) -->
             <radialGradient id="grad-character" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#FF4E3A" stop-opacity="0.3" />
-              <stop offset="65%" stop-color="#FF4E3A" stop-opacity="0.15" />
-              <stop offset="100%" stop-color="#FF4E3A" stop-opacity="0.0" />
+              <stop offset="0%" stop-color="#E05252" stop-opacity="0.3" />
+              <stop offset="65%" stop-color="#E05252" stop-opacity="0.15" />
+              <stop offset="100%" stop-color="#E05252" stop-opacity="0.0" />
             </radialGradient>
             <radialGradient id="grad-group" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#00A699" stop-opacity="0.25" />
-              <stop offset="65%" stop-color="#00A699" stop-opacity="0.12" />
-              <stop offset="100%" stop-color="#00A699" stop-opacity="0.0" />
+              <stop offset="0%" stop-color="#319795" stop-opacity="0.25" />
+              <stop offset="65%" stop-color="#319795" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="#319795" stop-opacity="0.0" />
             </radialGradient>
             <radialGradient id="grad-concept" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25" />
-              <stop offset="65%" stop-color="#3b82f6" stop-opacity="0.12" />
-              <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0" />
+              <stop offset="0%" stop-color="#4A69BD" stop-opacity="0.25" />
+              <stop offset="65%" stop-color="#4A69BD" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="#4A69BD" stop-opacity="0.0" />
             </radialGradient>
             
             <!-- 쫀득한 유기적 그룹화 효과 (Gooey / Metaball Filter) -->
@@ -279,11 +279,11 @@
         <div class="form-group">
           <label for="edge-color">관계 성격 (선 색상)</label>
           <select id="edge-color">
-            <option value="#D1CFCA">일반 / 중립 관계 (옅은 회색)</option>
-            <option value="#FF4E3A">적대 / 경쟁 관계 (다홍색)</option>
-            <option value="#00A699">우호 / 동맹 관계 (민트색)</option>
-            <option value="#3b82f6">가족 / 혈연 관계 (파란색)</option>
-            <option value="#F5C400">특별한 / 기타 관계 (노란색)</option>
+            <option value="#8E9AA6">일반 / 중립 (슬레이트 그레이)</option>
+            <option value="#E05252">적대 / 경쟁 (클림슨 레드)</option>
+            <option value="#319795">우호 / 동맹 (다크 틸)</option>
+            <option value="#4A69BD">가족 / 혈연 (코발트 네이비)</option>
+            <option value="#D9A74A">특별 / 기타 (브론즈 골드)</option>
           </select>
         </div>
         <div class="form-group">
