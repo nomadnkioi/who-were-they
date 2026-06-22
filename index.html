@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <div id="app">
@@ -307,13 +307,19 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
   <script>
+    // 캐시 꼬임 문제를 막기 위해 기존에 등록된 PWA 서비스 워커를 즉각 해제(Unregister)
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=5')
-          .then((reg) => console.log('서비스 워커 등록 성공:', reg.scope))
-          .catch((err) => console.log('서비스 워커 등록 실패:', err));
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister().then(function(success) {
+            if (success) {
+              console.log('기존 서비스 워커 해제 완료. 새 버전 적용을 위해 페이지를 새로고침합니다.');
+              window.location.reload();
+            }
+          });
+        }
       });
     }
   </script>
