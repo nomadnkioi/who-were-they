@@ -85,7 +85,7 @@ async function init() {
     if (user) {
       // 로그인 시 클라우드에서 데이터 가져오기
       try {
-        syncStatus.textContent = '동기화 중...';
+        syncStatus.textContent = '연동 중...';
         syncStatus.className = 'sync-status-offline';
         
         const snapshot = await db.ref(`users/${user.uid}/projects`).once('value');
@@ -111,14 +111,14 @@ async function init() {
             await db.ref(`users/${user.uid}/projects`).set(state.projects);
           }
         }
-        syncStatus.textContent = '동기화 완료';
+        syncStatus.textContent = '연동 완료';
         syncStatus.className = 'sync-status-online';
         renderSidebar();
         renderProject();
         resetZoom();
       } catch (err) {
         console.error('클라우드 데이터를 가져오지 못했습니다. 로컬 데이터를 유지합니다.', err);
-        syncStatus.textContent = '동기화 오류';
+        syncStatus.textContent = '연동 오류';
         syncStatus.className = 'sync-status-offline';
       }
     } else {
@@ -200,12 +200,12 @@ function updateSyncUI(user) {
     userName.textContent = user.displayName || user.email || 'GitHub 유저';
     userAvatar.src = user.photoURL || 'https://cdn-icons-png.flaticon.com/512/25/25231.png';
     
-    syncStatus.textContent = '동기화 완료';
+    syncStatus.textContent = '연동 완료';
     syncStatus.className = 'sync-status-online';
   } else {
     syncSetupContainer.classList.remove('hidden');
     syncActiveContainer.classList.add('hidden');
-    syncStatus.textContent = '로그인 필요';
+    syncStatus.textContent = '연동 안 됨';
     syncStatus.className = 'sync-status-offline';
   }
 }
@@ -214,14 +214,14 @@ async function syncDataToServer() {
   const user = auth.currentUser;
   if (!user) return;
   try {
-    syncStatus.textContent = '동기화 중...';
+    syncStatus.textContent = '연동 중...';
     syncStatus.className = 'sync-status-offline';
     await db.ref(`users/${user.uid}/projects`).set(state.projects);
-    syncStatus.textContent = '동기화 완료';
+    syncStatus.textContent = '연동 완료';
     syncStatus.className = 'sync-status-online';
   } catch (e) {
     console.error('서버 동기화 실패:', e);
-    syncStatus.textContent = '동기화 실패';
+    syncStatus.textContent = '연동 실패';
     syncStatus.className = 'sync-status-offline';
   }
 }
