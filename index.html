@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who Were They?</title>
+  
+  <!-- PWA & Mobile Web App Meta -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="theme-color" content="#0033CC">
+
+  <!-- Google Fonts: Outfit, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+
+
+    <!-- 좌측 사이드바: 프로젝트 목록 및 액션 -->
+    <aside id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-sub">RELATION MAP</div>
+        <h1 class="brand-title">WHO WERE THEY?</h1>
+        <div class="brand-decor"></div>
+      </div>
+
+      <!-- 프로젝트 섹션 -->
+      <div class="sidebar-section">
+        <div class="section-header">
+          <span>PROJECTS</span>
+          <button id="btn-add-project" title="새 프로젝트 추가" class="btn-icon-small">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </button>
+        </div>
+        <ul id="project-list" class="sidebar-list">
+          <!-- 프로젝트 항목들이 동적으로 들어감 -->
+        </ul>
+      </div>
+
+      <!-- Firebase 클라우드 동기화 섹션 -->
+      <div class="sidebar-footer">
+        <div class="sync-section">
+          <div class="sync-header">
+            <span>CLOUD SYNC</span>
+            <span id="sync-status" class="sync-status-offline">로그인 필요</span>
+          </div>
+          
+          <!-- 미연동 상태 UI (GitHub 로그인) -->
+          <div id="sync-setup-container">
+            <button id="btn-github-login" class="btn-primary full-width" style="margin-bottom: 0.5rem; justify-content: center; gap: 0.5rem;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              GitHub 로그인 연동
+            </button>
+          </div>
+          
+          <!-- 연동 완료 상태 UI -->
+          <div id="sync-active-container" class="hidden">
+            <div class="user-profile-display" style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; background: #FFF; border: 1px solid var(--border-muted); padding: 0.5rem;">
+              <img id="user-avatar" src="" alt="Avatar" style="width: 24px; height: 24px; border-radius: 50%;">
+              <span id="user-name" style="font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">GitHub User</span>
+            </div>
+            <button id="btn-firebase-logout" class="btn-danger full-width" style="padding: 0.4rem; font-size: 0.8rem;">로그아웃</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 메인 워크스페이스 -->
+    <main id="workspace">
+      <!-- 상단 컨트롤 바 -->
+      <header id="control-bar">
+        <div class="project-info">
+          <span class="decor-dot"></span>
+          <h2 id="current-project-title">선택된 프로젝트 없음</h2>
+        </div>
+
+        <div class="canvas-controls">
+          <button id="btn-zoom-in" class="btn-control" title="확대">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+          </button>
+          <button id="btn-zoom-out" class="btn-control" title="축소">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+          </button>
+          <button id="btn-zoom-reset" class="btn-control" title="원래대로">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </button>
+          <div class="control-divider"></div>
+          <button id="btn-add-node" class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+            노드 추가
+          </button>
+          <button id="btn-add-edge" class="btn-secondary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon-inline"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+            관계 연결
+          </button>
+        </div>
+      </header>
+
+      <!-- 관계도 SVG 캔버스 영역 -->
+      <div id="canvas-container">
+        <div class="canvas-grid-bg"></div>
+        <svg id="relation-canvas" width="100%" height="100%">
+          <defs>
+            <!-- 관계선 화살표 정의 (각 색상별로 분리, 각도를 더 넓히고 길이를 늘린 세련된 선 화살표 형태) -->
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#D1CFCA" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+            </marker>
+            <marker id="arrow-selected" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#1E1E1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </marker>
+            <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#FF4E3A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+            </marker>
+            <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#00A699" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+            </marker>
+            <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#3b82f6" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+            </marker>
+            <marker id="arrow-yellow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+              <path d="M 1.5 1.5 L 9 5 L 1.5 8.5" fill="none" stroke="#F5C400" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+            </marker>
+            
+            <!-- 노드 타입별 부드러운 그라데이션 (April Greiman & Modern Pastel Style) -->
+            <radialGradient id="grad-character" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FF4E3A" stop-opacity="0.3" />
+              <stop offset="65%" stop-color="#FF4E3A" stop-opacity="0.15" />
+              <stop offset="100%" stop-color="#FF4E3A" stop-opacity="0.0" />
+            </radialGradient>
+            <radialGradient id="grad-group" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#00A699" stop-opacity="0.25" />
+              <stop offset="65%" stop-color="#00A699" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="#00A699" stop-opacity="0.0" />
+            </radialGradient>
+            <radialGradient id="grad-concept" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.25" />
+              <stop offset="65%" stop-color="#3b82f6" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.0" />
+            </radialGradient>
+            
+            <!-- 쫀득한 유기적 그룹화 효과 (Gooey / Metaball Filter) -->
+            <filter id="goo">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="24" result="blur" />
+              <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -8" result="goo" />
+            </filter>
+          </defs>
+          <!-- 전체 노드 및 링크를 담고 줌/팬을 적용할 그룹 -->
+          <g id="canvas-content">
+            <!-- 그룹(공통점) 배경 영역 레이어 (가장 아래에 위치) -->
+            <g id="groups-group"></g>
+            <!-- 관계선 그룹 -->
+            <g id="links-group"></g>
+            <!-- 노드 그룹 -->
+            <g id="nodes-group"></g>
+          </g>
+        </svg>
+        
+        <!-- 빈 화면일 때 안내 문구 -->
+        <div id="empty-canvas-message" class="empty-message">
+          <p class="empty-title">생성된 노드가 없습니다</p>
+          <p class="empty-subtitle">우측 상단의 [+ 노드 추가] 버튼을 눌러 인물, 집단, 개념을 등록해 보세요.</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- 우측 상세 정보 사이드 패널 -->
+    <section id="detail-panel" class="hidden">
+      <div class="panel-header">
+        <h3 id="detail-panel-title">상세 정보</h3>
+        <button id="btn-close-detail" class="btn-close">&times;</button>
+      </div>
+      
+      <div id="detail-view-mode" class="panel-content">
+        <!-- 노드 상세 보기 -->
+        <div class="detail-block">
+          <div id="detail-node-type" class="badge">인물</div>
+          <h2 id="detail-node-name" class="detail-name">이름</h2>
+          <p id="detail-node-description" class="detail-desc">설명이 여기에 표시됩니다.</p>
+        </div>
+
+        <div class="detail-block">
+          <h4 class="sub-block-title">관련 관계 목록</h4>
+          <ul id="detail-relations-list" class="relations-list">
+            <!-- 관계 목록 동적 로드 -->
+          </ul>
+        </div>
+
+        <div class="panel-actions">
+          <button id="btn-edit-node-trigger" class="btn-outline full-width">정보 수정하기</button>
+          <button id="btn-delete-node-trigger" class="btn-danger full-width">노드 삭제하기</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 노드 추가/수정 모달 -->
+  <div id="node-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="node-modal-title">노드 생성</h3>
+        <button class="btn-close modal-close-btn">&times;</button>
+      </div>
+      <form id="node-form" class="modal-body">
+        <input type="hidden" id="node-id">
+        <div class="form-group">
+          <label for="node-name">이름 / 개념명 <span class="required">*</span></label>
+          <input type="text" id="node-name" required placeholder="예: 유비, 스타크 가문, 민주주의 등">
+        </div>
+        <div class="form-group">
+          <label for="node-type">구분</label>
+          <select id="node-type">
+            <option value="character">인물 (Character)</option>
+            <option value="group">집단 / 조직 (Group / Organization)</option>
+            <option value="concept">개념 / 키워드 (Concept / Keyword)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="node-importance">중요도 (노드 크기)</label>
+          <select id="node-importance">
+            <option value="normal">보통 (Normal)</option>
+            <option value="high">중요 (High)</option>
+            <option value="core">핵심 (Core)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="node-group-input">소속 그룹 / 공통점</label>
+          <input type="text" id="node-group-input" placeholder="예: 스타크 가문, 촉한, 어벤져스 등 (공란 가능)">
+        </div>
+        <div class="form-group">
+          <label for="node-desc">설명 및 세부 정보</label>
+          <textarea id="node-desc" rows="4" placeholder="인물에 대한 설명, 특징, 타임라인 등을 자유롭게 기입하세요."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline modal-close-btn">취소</button>
+          <button type="submit" class="btn-primary">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 관계 연결 추가/수정 모달 -->
+  <div id="edge-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="edge-modal-title">관계 연결 설정</h3>
+        <button class="btn-close modal-close-btn">&times;</button>
+      </div>
+      <form id="edge-form" class="modal-body">
+        <input type="hidden" id="edge-id">
+        <div class="form-group">
+          <label for="edge-source">출발 노드 (주체) <span class="required">*</span></label>
+          <select id="edge-source" required>
+            <!-- 노드 목록 동적 추가 -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edge-target">대상 노드 (객체) <span class="required">*</span></label>
+          <select id="edge-target" required>
+            <!-- 노드 목록 동적 추가 -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edge-type">관계 설명 <span class="required">*</span></label>
+          <input type="text" id="edge-type" required placeholder="예: 주군, 적대 관계, 동맹, 형제 등">
+        </div>
+        <div class="form-group">
+          <label for="edge-color">관계 성격 (선 색상)</label>
+          <select id="edge-color">
+            <option value="#D1CFCA">일반 / 중립 관계 (옅은 회색)</option>
+            <option value="#FF4E3A">적대 / 경쟁 관계 (다홍색)</option>
+            <option value="#00A699">우호 / 동맹 관계 (민트색)</option>
+            <option value="#3b82f6">가족 / 혈연 관계 (파란색)</option>
+            <option value="#F5C400">특별한 / 기타 관계 (노란색)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edge-direction">방향성</label>
+          <select id="edge-direction">
+            <option value="directed">단방향 (주체 ➔ 객체)</option>
+            <option value="bidirectional">양방향 (주체 ⇄ 객체)</option>
+            <option value="none">방향 없음 (단순 연결)</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline modal-close-btn">취소</button>
+          <button type="submit" class="btn-primary">연결 저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDK Compat 라이브러리들 추가 -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('서비스 워커 등록 성공:', reg.scope))
+          .catch((err) => console.log('서비스 워커 등록 실패:', err));
+      });
+    }
+  </script>
+</body>
+</html>
