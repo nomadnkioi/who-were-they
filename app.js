@@ -299,6 +299,14 @@ function renderProject() {
   renderNodes(proj);
 }
 
+// 노드 중요도 및 모바일 기기 감지에 따른 반지름(r) 값 동적 결정 헬퍼
+function getNodeRadius(importance) {
+  const isMobile = window.innerWidth <= 768;
+  if (importance === 'core') return isMobile ? 50 : 68;
+  if (importance === 'high') return isMobile ? 42 : 56;
+  return isMobile ? 32 : 44;
+}
+
 // Render Groups (공통점 있는 개체들을 쫀득하고 유기적으로 묶어주는 Gooey Metaball 젤리 배경)
 function renderGroups(proj) {
   const groupsGroup = document.getElementById('groups-group');
@@ -333,9 +341,7 @@ function renderGroups(proj) {
     let maxY = -Infinity;
     
     nodes.forEach(n => {
-      let r = 44;
-      if (n.importance === 'high') r = 56;
-      if (n.importance === 'core') r = 68;
+      const r = getNodeRadius(n.importance);
 
       sumX += Number(n.x);
       maxY = Math.max(maxY, Number(n.y) + r);
@@ -385,15 +391,9 @@ function renderLinks(proj) {
     const dy = y2 - y1;
     const dr = Math.sqrt(dx * dx + dy * dy);
 
-    // 중요도에 따른 원형 반지름 값 얻기 (내부 텍스트 삽입을 위해 확장됨)
-    const getRadius = (importance) => {
-      if (importance === 'core') return 68;
-      if (importance === 'high') return 56;
-      return 44;
-    };
-
-    const sourceR = getRadius(sourceNode.importance);
-    const targetR = getRadius(targetNode.importance);
+    // 중요도에 따른 원형 반지름 값 얻기 (모바일 여부에 맞춰 자동 스케일 적용)
+    const sourceR = getNodeRadius(sourceNode.importance);
+    const targetR = getNodeRadius(targetNode.importance);
 
     // 원의 경계면에서 정확히 마주치도록 시작/끝 좌표 보정
     const sourceOffset = sourceR + 2;
@@ -474,10 +474,8 @@ function renderLinks(proj) {
 function renderNodes(proj) {
   nodesGroup.innerHTML = '';
   proj.nodes.forEach(node => {
-    // 내부 텍스트 입력을 위해 원 크기 확장
-    let r = 44;
-    if (node.importance === 'high') r = 56;
-    if (node.importance === 'core') r = 68;
+    // 내부 텍스트 입력을 위해 원 크기 확장 (모바일 여부에 따라 동적 반경 적용)
+    const r = getNodeRadius(node.importance);
     
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('class', `svg-node type-${node.type} importance-${node.importance} ${state.selectedNodeId === node.id ? 'selected' : ''}`);
@@ -605,10 +603,15 @@ function zoom(factor, clientX, clientY) {
 
 function resetZoom() {
   const rect = svg.getBoundingClientRect();
+  
+  // 모바일 기기(너비 768px 이하)인 경우 기기 화면에 맞게 기본 줌 배율을 축소하여 한눈에 들어오게 처리
+  const isMobile = window.innerWidth <= 768;
+  const defaultScale = isMobile ? 0.65 : 1.0;
+  
   transform = {
-    x: rect.width / 8,
-    y: rect.height / 8,
-    k: 1
+    x: isMobile ? rect.width / 6 : rect.width / 8,
+    y: isMobile ? rect.height / 5 : rect.height / 8,
+    k: defaultScale
   };
   updateTransform();
 }
